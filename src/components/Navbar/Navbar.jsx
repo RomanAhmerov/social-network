@@ -18,15 +18,15 @@ const Navbar = () => {
             </div>
 
             <div className={s.item}>
-                <a>News</a>
+                <a className={s.disabled}>News</a>
             </div>
 
             <div className={s.item}>
-                <a>Music</a>
+                <a className={s.disabled}>Music</a>
             </div>
 
             <div className={s.item}>
-                <a>Settings</a>
+                <a className={s.disabled}>Settings</a>
             </div>
         </nav>
     );

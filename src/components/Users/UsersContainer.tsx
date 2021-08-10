@@ -2,7 +2,6 @@ import React from "react";
 import {connect} from "react-redux";
 import {
     follow,
-    setCurrentPage,
     unfollow,
     // Thunk
     requestUsers
@@ -19,8 +18,38 @@ import {
     getPageSize,
     getTotalUsersCount
 } from "../../redux/usersSelectors";
+import {UserType} from "../../types/types";
+import {AppStateType} from "../../redux/reduxStore";
 
-class UsersContainer extends React.Component {
+
+// Type (TS)
+type MapStatePropsType = {
+    currentPage: number
+    pageSize: number
+    isFetching: boolean
+    totalUsersCount: number
+    users: Array<UserType>
+    followingInProgress: Array<number>
+}
+
+type MapDispatchPropsType = {
+    requestUsers: (currentPage: number, pageSize: number) => void
+    follow: (userId: number) => void
+    unfollow: (userId: number) => void
+}
+
+type OwnPropsType = {
+    pageTitle: string
+}
+
+// Общий тип props-ов
+type PropsType = MapStatePropsType & MapDispatchPropsType & OwnPropsType
+
+
+
+// CC
+// class UsersContainer extends React.Component<PropsType, StateType> { ... } // Для расширенного примера
+class UsersContainer extends React.Component<PropsType> {
     // // Если конструктор только расширяет наш класс (см. ниже), то его можно не писать !
     // constructor(props) {
     //     super(props);
@@ -28,20 +57,20 @@ class UsersContainer extends React.Component {
 
     // При успешной загрузке компонентов
     componentDidMount() {
-        // ???
         const {currentPage, pageSize} = this.props;
         this.props.requestUsers(currentPage, pageSize);
     }
 
     // Изменение страницы пользователей
-    onPageChanged = (pageNumber) => {
-        // ????
+    onPageChanged = (pageNumber: number) => {
         const {pageSize} = this.props;
         this.props.requestUsers(pageNumber, pageSize);
     }
 
     render() {
         return <>
+            <h2>{this.props.pageTitle}</h2>
+
             {this.props.isFetching ? <Preloader/> : null}
 
             <Users totalUsersCount={this.props.totalUsersCount}
@@ -73,7 +102,7 @@ class UsersContainer extends React.Component {
 
 
 // Новая версия
-let mapStateToProps = (state) => {
+let mapStateToProps = (state: AppStateType): MapStatePropsType => {
     return {
         users: getUsers(state),
         pageSize: getPageSize(state),
@@ -87,11 +116,11 @@ let mapStateToProps = (state) => {
 
 // Функция compose (хорошая практика)
 export default compose(
-    connect(mapStateToProps,
+    connect<MapStatePropsType, MapDispatchPropsType, OwnPropsType, AppStateType>(
+        mapStateToProps,
     {
         follow,
         unfollow,
-        setCurrentPage,
         // Thunk
         requestUsers
     }),

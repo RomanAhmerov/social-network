@@ -12,3 +12,7 @@
 .item a.activeLink {
     color: gold;
 }
+
+.item .disabled {
+    color: gray;
+}

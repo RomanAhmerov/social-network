@@ -1,7 +1,21 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import s from './ProfileInfo.module.css';
 
-class ProfileStatus extends React.Component {
+
+// Type (TS)
+type PropsType = {
+    status: string
+
+    updateStatus: (newStatus: string) => void
+}
+
+type StateType = {
+    editMode: boolean
+    status: string
+}
+
+// CC
+class ProfileStatus extends React.Component<PropsType, StateType> {
     // local state
     state = {
         editMode: false,
@@ -31,14 +45,14 @@ class ProfileStatus extends React.Component {
     }
 
     // Изменение значения локального state при вводе символов в input
-    onStatusChange = (e) => {
+    onStatusChange = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({
             status: e.currentTarget.value
         });
     }
 
     //Методы жизненного цикла
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps: PropsType, prevState: StateType) {
         // Всегда нужно использовать условный оператор (для устранения бесконечного цикла)
         if (prevProps.status !== this.props.status) {
            this.setState({

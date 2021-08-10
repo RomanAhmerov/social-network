@@ -2,12 +2,12 @@ import React from 'react';
 import Profile from "./Profile";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {getUserProfile, getStatus, updateStatus} from "../../redux/profileReducer";
+import {getUserProfile, getStatus, updateStatus, savePhoto, saveProfile} from "../../redux/profileReducer";
 import {compose} from "redux";
 
 class ProfileContainer extends React.Component {
-    // При завершения отрисовки компоненты (метод жизненного цикла)
-    componentDidMount() {
+    // Метод обновления данных профиля
+    refreshProfile() {
         let userId = this.props.match.params.userId;
 
         if (!userId) {
@@ -26,9 +26,29 @@ class ProfileContainer extends React.Component {
         this.props.getStatus(userId);
     }
 
+
+    // При завершения отрисовки компоненты (метод жизненного цикла)
+    componentDidMount() {
+        this.refreshProfile();
+    }
+
+    // Перерисовка компоненты при изменении (props или state) (метод жизненного цикла)
+    componentDidUpdate(prevProps, prevState) {
+        // Условный оператор для предотвращения зацикливания
+        if (prevProps.match.params.userId !== this.props.match.params.userId) {
+            this.refreshProfile();
+        }
+    }
+
     render() {
         return (
-            <Profile {...this.props} profile={this.props.profile} status={this.props.status} updateStatus={this.props.updateStatus} />
+            <Profile {...this.props} profile={this.props.profile}
+                     status={this.props.status}
+                     updateStatus={this.props.updateStatus}
+                     isOwner={!this.props.match.params.userId}
+                     savePhoto={this.props.savePhoto}
+                     saveProfile={this.props.saveProfile}
+            />
         );
     }
 };
@@ -43,9 +63,8 @@ let mapStateToProps = (state) => ({
 
 // Функция compose (хорошая практика)
 export default compose(
-    connect(mapStateToProps, {getUserProfile, getStatus, updateStatus}),
+    connect(mapStateToProps, {getUserProfile, getStatus, updateStatus, savePhoto, saveProfile}),
     withRouter,
-    // withAuthRedirect // Работа с HOC
 ) (ProfileContainer);
 
 // Аналог (плохая практика)

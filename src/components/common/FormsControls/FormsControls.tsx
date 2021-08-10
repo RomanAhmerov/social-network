@@ -1,8 +1,15 @@
 import React from "react";
 import styles from "./FormControls.module.css"
+import {WrappedFieldMetaProps, WrappedFieldProps} from "redux-form";
 
 // Данная компонента нужна для того, чтобы избежать дублирование кода в обёртках (ниже)
-const FormControl = ({input, meta: {touched, error}, children}) => {
+// Type (TS)
+type FormControlPropsType = {
+    meta: WrappedFieldMetaProps
+    // children: React.ReactNode // Эта типизация происходит автоматически (её не нужно делать)
+}
+
+const FormControl: React.FC<FormControlPropsType> = ({meta: {touched, error}, children}) => {
     const hasError = touched && error;
 
     return (
@@ -17,8 +24,9 @@ const FormControl = ({input, meta: {touched, error}, children}) => {
 };
 
 // Данные элементы являются обёртками стандартных элементов ввода для дальнейшего взаимодействия с ними
-export const Textarea = (props) => {
-    const {input, meta, child, ...restProps} = props;
+export const Textarea: React.FC<WrappedFieldProps> = (props) => {
+    // const {input, meta, child, ...restProps} = props;
+    const {input, meta, ...restProps} = props;
     return (
         <FormControl {...props}>
             <textarea {...input} {...restProps} />
@@ -26,8 +34,9 @@ export const Textarea = (props) => {
     )
 };
 
-export const Input = (props) => {
-    const {input, meta, child, ...restProps} = props;
+export const Input: React.FC<WrappedFieldProps> = (props) => {
+    // const {input, meta, child, ...restProps} = props;
+    const {input, meta, ...restProps} = props;
     return (
         <FormControl {...props}>
             <input {...input} {...restProps} />
