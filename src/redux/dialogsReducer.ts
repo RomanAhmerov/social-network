@@ -34,7 +34,7 @@ let initialState = {
 };
 
 // Type (TS) (второй способ типизации)
-export  type InitialStateType = typeof initialState
+export type InitialStateType = typeof initialState
 
 // Reducer
 const dialogsReducer = (state = initialState, action: ActionsType): InitialStateType => {
@@ -53,7 +53,7 @@ const dialogsReducer = (state = initialState, action: ActionsType): InitialState
 type ActionsType = InferActionsTypes<typeof actions>
 
 export const actions = {
-    sendMessageCreator: (newMessageBody: string) => ({type: 'SN/DIALOGS/SEND-MESSAGE', newMessageBody} as const)
+    sendMessage: (newMessageBody: string) => ({type: 'SN/DIALOGS/SEND-MESSAGE', newMessageBody} as const)
 }
 
 export default  dialogsReducer;

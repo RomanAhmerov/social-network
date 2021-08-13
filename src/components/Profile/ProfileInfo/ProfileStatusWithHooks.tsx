@@ -1,7 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import s from './ProfileInfo.module.css';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 
-const ProfileStatusWithHooks = (props) => {
+// Type (TS)
+type PropsType = {
+        status: string
+        updateStatus: (status: string) => void
+}
+
+// FC
+const ProfileStatusWithHooks: React.FC<PropsType> = (props) => {
         // Hook useState
         // local state 1 (editMode)
         let [editMode, setEditMode]  = useState(false);
@@ -18,7 +24,7 @@ const ProfileStatusWithHooks = (props) => {
         // local state 2 (status)
         let [status, setStatus]  = useState(props.status);
 
-        const onStatusChange = (e) => {
+        const onStatusChange = (e: ChangeEvent<HTMLInputElement>) => {
                 setStatus(e.currentTarget.value) //Изменение status в local state
         }
 

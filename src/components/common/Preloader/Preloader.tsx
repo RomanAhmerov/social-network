@@ -3,7 +3,7 @@ import preloader from "../../../assets/images/preloader.svg";
 
 
 
-let Preloader = (props) => {
+let Preloader = () => {
     return (
         <div>
             <img src={preloader} style={ {backgroundColor: "white"} } />

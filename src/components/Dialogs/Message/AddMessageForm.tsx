@@ -1,12 +1,18 @@
 import React from "react";
-import {Field, reduxForm} from "redux-form";
+import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Textarea} from "../../common/FormsControls/FormsControls";
 import {maxLengthCreator, required} from "../../../utils/validators/validators";
+
+// Type (TS)
+type PropsType = {}
+type NewMessageFormValuesType = {newMessageBody: string}
+
 
 // Валидация по максимальному кол-ву элементов
 const maxLength50 = maxLengthCreator(50);
 
-const AddMessageForm = (props) => {
+// FC
+const AddMessageForm: React.FC<InjectedFormProps<NewMessageFormValuesType, PropsType> & PropsType> = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
             <div>
@@ -21,7 +27,8 @@ const AddMessageForm = (props) => {
     );
 };
 
-export default reduxForm({
+
+export default reduxForm<NewMessageFormValuesType>({
     // a unique name for the form (уникальное имя для данной формы)
-    form: 'dialogAddMessageForm'
+    form: 'dialogAddMessageForm',
 }) (AddMessageForm);

@@ -8,7 +8,7 @@ import LoginPage from "./components/Login/Login";
 import {connect, Provider} from "react-redux";
 import {compose} from "redux";
 import Preloader from "./components/common/Preloader/Preloader";
-import store from "./redux/reduxStore";
+import store, {AppStateType} from "./redux/reduxStore";
 import {withSuspense} from "./hoc/withSuspense";
 import {initializeApp} from "./redux/appReducer";
 
@@ -17,9 +17,18 @@ const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsCo
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
 
 
+// Type (TS)
+type MapPropsType = ReturnType<typeof mapStateToProps>
+type DispatchPropsType = {
+    initializeApp: () => void
+}
 
-class App extends React.Component {
-    // catchAllUnhandledErrors = (reason, promise) => {
+// (HOC) Component
+const SuspenseProfile = withSuspense(ProfileContainer);
+
+// CC
+class App extends React.Component<MapPropsType & DispatchPropsType> {
+    // catchAllUnhandledErrors = (e: PromiseRejectionEvent) => {
     //     alert("Упс... ошибочка!");
     // }
 
@@ -50,7 +59,7 @@ class App extends React.Component {
                     {/* Редирект на страницу профиля */}
                     <Redirect from="/" to="/profile" />
 
-                    <Route path="/profile/:userId?" render={withSuspense(ProfileContainer)} />
+                    <Route path="/profile/:userId?" render={() => <SuspenseProfile />} />
 
                     {/*Для примера Роутнинг диалогов в старом варианте*/}
                     <Route path="/dialogs" render={() => {
@@ -70,18 +79,21 @@ class App extends React.Component {
     }
 };
 
-const mapStateToProps = (state) => ({
+
+const mapStateToProps = (state: AppStateType) => ({
     initialized: state.app.initialized
 });
 
 
-const AppContainer = compose(
+// App оборачиваем в контейнерную компоненту для передачи в неё необходимых данных
+const AppContainer = compose<React.ComponentType>(
     withRouter,
     connect(mapStateToProps, {initializeApp}))
 (App);
 
 
-export const SamuraiJSApp = (props) => {
+// Дополнительная FC нужна для проведения тестов
+const SamuraiJSApp: React.FC = () => {
     return (
         <HashRouter>
             <Provider store={store}>

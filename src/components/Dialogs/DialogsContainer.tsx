@@ -4,25 +4,19 @@ import Dialogs from "./Dialogs";
 import {connect} from "react-redux";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
+import {AppStateType} from "../../redux/reduxStore";
+import {reset} from "redux-form";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppStateType) => {
   return {
       dialogsPage: state.dialogsPage,
   }
 };
 
-// Длинная версия mapDispatchToProps
-const mapDispatchToProps = (dispatch) => {
-    return {
-        sendMessage: (newMessageBody) => {
-            dispatch(actions.sendMessageCreator(newMessageBody))
-        }
-    };
-};
 
 // Функция compose (хорошая практика)
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
+export default compose<React.ComponentType>(
+    connect(mapStateToProps, {...actions, reset}),
     withAuthRedirect  // Работа с HOC
 )(Dialogs)
 
