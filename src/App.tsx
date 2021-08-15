@@ -3,7 +3,7 @@ import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import UsersContainer from "./components/Users/UsersContainer";
 import {BrowserRouter, HashRouter, Redirect, Route, withRouter} from "react-router-dom";
-import HeaderContainer from "./components/Header/HeaderContainer";
+// import HeaderContainer from "./components/Header/HeaderContainer";
 import LoginPage from "./components/Login/Login";
 import {connect, Provider} from "react-redux";
 import {compose} from "redux";
@@ -11,6 +11,42 @@ import Preloader from "./components/common/Preloader/Preloader";
 import store, {AppStateType} from "./redux/reduxStore";
 import {withSuspense} from "./hoc/withSuspense";
 import {initializeApp} from "./redux/appReducer";
+import Flex from "./components/StyledComponents/Flex";
+import styled, {createGlobalStyle} from "styled-components";
+import Container from "./components/StyledComponents/Container";
+
+
+// Style Global
+// Type (TS)
+type GlobalType = {
+    color: string
+}
+
+// Style
+const Global = createGlobalStyle<GlobalType>`
+  * {
+    margin: 0;
+    padding: 0;
+    
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI,Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+    font-size: 16px;
+    line-height: 1.5;
+    text-decoration: none;
+    color: ${props => props.color};
+    
+    box-sizing: border-box;
+  }
+  
+  ul {
+    padding-left: 0;
+  }
+
+  li {
+    list-style-type: none;
+  }
+`
+
+
 
 // Lazy loaded
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
@@ -18,7 +54,9 @@ const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileCo
 
 
 // Type (TS)
-type MapPropsType = ReturnType<typeof mapStateToProps>
+type MapPropsType = {
+    initialized: boolean
+} & GlobalType
 type DispatchPropsType = {
     initializeApp: () => void
 }
@@ -47,41 +85,50 @@ class App extends React.Component<MapPropsType & DispatchPropsType> {
 
     render() {
 
-        if (!this.props.initialized) {
-            return <Preloader/>
-        }
+        // if (!this.props.initialized) {
+        //     return <Preloader/>
+        // }
 
         return (
-            <div className='app-wrapper'>
-                <HeaderContainer/>
-                <Navbar/>
-                <div className='app-wrapper-content'>
-                    {/* Редирект на страницу профиля */}
-                    <Redirect from="/" to="/profile" />
+            <>
+                <Global color={this.props.color} />
 
-                    <Route path="/profile/:userId?" render={() => <SuspenseProfile />} />
 
-                    {/*Для примера Роутнинг диалогов в старом варианте*/}
-                    <Route path="/dialogs" render={() => {
-                        return (
-                            <React.Suspense fallback={<div>Loading...</div>}>
-                                <DialogsContainer/>
-                            </React.Suspense>
-                        )
-                    }}/>
+                <div>
+                    {/*<HeaderContainer/>*/}
+                    <Flex>
+                        <Navbar />
 
-                    <Route path="/users" render={() => <UsersContainer pageTitle="Users" />}/>
+                        <Container>
+                            {/* Редирект на страницу профиля */}
+                            <Redirect from="/" to="/profile" />
 
-                    <Route path="/login" render={() => <LoginPage/>}/>
+                            <Route path="/profile/:userId?" render={() => <SuspenseProfile />} />
+
+                            {/*Для примера Роутнинг диалогов в старом варианте*/}
+                            <Route path="/dialogs" render={() => {
+                                return (
+                                    <React.Suspense fallback={<div>Loading...</div>}>
+                                        <DialogsContainer/>
+                                    </React.Suspense>
+                                )
+                            }}/>
+
+                            <Route path="/users" render={() => <UsersContainer />}/>
+
+                            <Route path="/login" render={() => <LoginPage />}/>
+                        </Container>
+                    </Flex>
                 </div>
-            </div>
+            </>
         );
     }
 };
 
 
 const mapStateToProps = (state: AppStateType) => ({
-    initialized: state.app.initialized
+    initialized: state.app.initialized,
+    color: state.app.theme.global.color
 });
 
 

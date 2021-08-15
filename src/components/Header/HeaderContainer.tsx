@@ -14,8 +14,9 @@ class HeaderContainer extends React.Component<MapPropsType & DispatchPropsType> 
 };
 
 const mapStateToProps = (state: AppStateType) => ({
-    isAuth: state.auth.isAuth,
-    login: state.auth.login
+    // Styled
+    color: state.app.theme.global.color,
+    background: state.app.theme.sidebar.background
 });
 
-export default connect<MapPropsType, DispatchPropsType, {}, AppStateType>(mapStateToProps, {logout})(HeaderContainer);
+export default connect<MapPropsType, DispatchPropsType, {}, AppStateType>(mapStateToProps, {})(HeaderContainer);

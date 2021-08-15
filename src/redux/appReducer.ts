@@ -6,7 +6,32 @@ import {InferActionsTypes} from "./reduxStore";
 // Type (TS)
 // Initial State App
 let initialState = {
-    initialized: false
+    initialized: false,
+
+    theme: {
+        global: {
+            color: '#fefcf6'
+        },
+
+        sidebar: {
+            background: '#110f1a',
+            backgroundSecondary: '#1c1b2c'
+        },
+
+        section: {
+            background: '#34353a',
+            backgroundSecondary: 'rgba(48,45,77,0.34)',
+        },
+
+        button: {
+            // Active
+            backgroundActive: '#1c1b2c',
+
+            // Disabled
+            colorDisabled: '#8f8e8a',
+            backgroundDisabled: '#1c1b2c',
+        }
+    }
 };
 
 export type InitialStateType = typeof initialState

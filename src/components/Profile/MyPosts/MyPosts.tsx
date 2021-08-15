@@ -5,6 +5,10 @@ import {Field, FormAction, InjectedFormProps, reduxForm} from "redux-form"; // �
 import {maxLengthCreator, required} from "../../../utils/validators/validators";
 import {Textarea} from "../../common/FormsControls/FormsControls";
 import {PostType} from "../../../types/types";
+import Button from "../../StyledComponents/Button";
+import styled from "styled-components";
+import Container from "../../StyledComponents/Container";
+import {RouteComponentProps} from "react-router-dom";
 
 // Создатель валидатора
 const maxLength10 = maxLengthCreator(10);
@@ -12,6 +16,8 @@ const maxLength10 = maxLengthCreator(10);
 // Type (TS)
 export type MapPropsType = {
     posts: Array<PostType>
+    photo?: string
+    backgroundPosts?: string
 }
 
 export type DispatchPropsType = {
@@ -19,11 +25,15 @@ export type DispatchPropsType = {
     reset: (form: string) => FormAction
 }
 
+type PathParamsType = {
+    userId: string
+}
+
 // FC
-const MyPosts: React.FC<MapPropsType & DispatchPropsType> = React.memo(props => {
+const MyPosts: React.FC<MapPropsType & RouteComponentProps<PathParamsType> & DispatchPropsType> = React.memo(props => {
     let postsElements = [...props.posts]
         .reverse()
-        .map(p => <Post key={p.id} message={p.message} likesCount={p.likesCount}/>);
+        .map(p => <Post key={p.id} message={p.message} likesCount={p.likesCount} photo={props.photo} backgroundPosts={props.backgroundPosts} />);
 
 
     let onAddPost = (formData: AddPostFormValuesType) => {
@@ -32,15 +42,15 @@ const MyPosts: React.FC<MapPropsType & DispatchPropsType> = React.memo(props => 
     };
 
     return (
-        <div className={s.postsBlock}>
-            <h3>My posts</h3>
+        <Container>
+            <StyledProfilePostTitle>{!props.match.params.userId ? 'My posts' : 'Posts'}</StyledProfilePostTitle>
 
-            <AddNewPostReduxForm onSubmit={onAddPost}/>
+            {!props.match.params.userId && <AddNewPostReduxForm onSubmit={onAddPost}/>}
 
-            <div className={s.posts}>
+            <StyledPostsWrapper >
                 {postsElements}
-            </div>
-        </div>
+            </StyledPostsWrapper>
+        </Container>
     );
 });
 
@@ -56,13 +66,12 @@ type AddPostFormValuesType = {
 const AddNewPostForm: React.FC<InjectedFormProps<AddPostFormValuesType, PropsFormType> & PropsFormType> = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
-            New post
             <div>
-                <Field component={Textarea} name="newPostText" validate={[required]} placeholder="Post message" />
+                <Field component={Textarea} name="newPostText" validate={[required]} placeholder="Enter post text..." />
             </div>
 
             <div>
-                <button>Add post</button>
+                <Button margin='0 0 10px 0'>Add post</Button>
             </div>
         </form>
     )
@@ -78,3 +87,20 @@ const AddNewPostReduxForm = reduxForm<AddPostFormValuesType, PropsFormType>(
 ) (AddNewPostForm)
 
 export default MyPosts;
+
+// Style
+const StyledProfilePostTitle = styled.h4`
+  margin-top: 35px;
+  margin-bottom: 5px;
+  max-width: 200px;
+  
+  font-size: 20px;
+  box-shadow: 0 1px 0 0 #3672f4;
+  
+`
+
+
+
+const StyledPostsWrapper = styled.div` 
+    margin-top: 20px;
+`

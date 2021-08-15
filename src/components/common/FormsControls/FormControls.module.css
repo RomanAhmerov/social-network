@@ -1,15 +1,24 @@
+    /* Error Style */
 .formControl.error input,
 .formControl.error textarea
 {
-    border: 2px solid red;
+    box-shadow: 0 0 4px 1px #f44336;
 }
 
 .formControl.error span {
-    color: red;
+    color: rgba(244, 67, 54, 0.7);
 }
 
 .formSummaryError {
-    border: 1px red solid;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 4px 1px #f44336;
     padding: 5px;
-    color: red;
+    text-align: center;
+    color: rgba(244, 67, 54, 0.7);
+}
+
+.formControl {
+    margin: 20px 0;
 }

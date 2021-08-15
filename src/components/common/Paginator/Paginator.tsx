@@ -1,5 +1,8 @@
 import React, {useState} from "react";
 import styles from "./Paginator.module.css";
+import Button from "../../StyledComponents/Button";
+import Flex from "../../StyledComponents/Flex";
+import styled, {css} from "styled-components";
 
 // Type (TS)
 type PropsType = {
@@ -31,27 +34,50 @@ const Paginator: React.FC<PropsType> = ({totalItemsCount, pageSize, currentPage,
     let rightPortionPageNumber = portionNumber * portionSize;
 
     return (
-        <div className={styles.paginator}>
-            {portionNumber > 1 &&
-            <button onClick={() => {
+        <Flex width='68px' direction='column' align='center' margin='0 0 0 20px'>
+
+            <Button margin='0 0 5px 0' disabled={portionNumber > 1 ? false : true} padding='5px 15px' onClick={() => {
                 setPortionNumber(portionNumber - 1)
-            }}>PREV</button>}
+            }}>PREV</Button>
 
             {pages
                 .filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
                 .map((p) => {
-                    return <span key={p} className={currentPage === p ? styles.selectedPage : ""}
+                    return <div key={p} className={currentPage === p ? styles.selectedPage : "" + styles.pageNumber}
                                  onClick={(e) => {
                                      onPageChanged(p)
-                                 }}>{p}</span>
+                                 }}>{p}</div>
                 })}
 
-            {portionNumber < portionCount &&
-            <button onClick={() => {
+            <Button margin='5px 0 0 0' disabled={portionNumber < portionCount ? false : true } padding='5px 15px' onClick={() => {
                 setPortionNumber(portionNumber + 1)
-            }}>NEXT</button>}
-        </div>
+            }}>NEXT</Button>
+        </Flex>
     )
 };
 
 export default Paginator;
+
+// Style
+const StyledButton = styled.button`
+
+  border-radius: 30px;
+  border-width: 0;
+
+  background-color: rgba(54, 114, 244, 0.6);
+  outline: none;
+  
+  &:hover {
+    box-shadow: 0 0 10px 1px #3672f4;
+    background-color: rgba(54, 114, 244, 1);
+  }
+  
+  ${props => props.disabled && css`
+    &:hover {
+      background-color: rgba(54, 114, 244, 0.3);
+      box-shadow: none;
+    }
+
+    background-color: rgba(54, 114, 244, 0.3);
+  `}
+`

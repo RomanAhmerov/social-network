@@ -1,12 +1,18 @@
 import React from "react";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import {Input} from "../common/FormsControls/FormsControls";
+import {Checkbox, Input} from "../common/FormsControls/FormsControls";
 import {required} from "../../utils/validators/validators";
 import {login} from "../../redux/authReducer";
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
 import styles from "./../common/FormsControls/FormControls.module.css"
 import {AppStateType} from "../../redux/reduxStore";
+import TitleSection from "../StyledComponents/TitleSection";
+import styled from "styled-components";
+import Container from "../StyledComponents/Container";
+import Flex from "../StyledComponents/Flex";
+import Li from "../StyledComponents/Li";
+import Button from "../StyledComponents/Button";
 
 // Type (TS)
 type LoginFormOwnProps = {
@@ -18,32 +24,39 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormValuesType, LoginFormOwnPro
         // Redux-form прокидывает в props (handleSubmit)
         <form onSubmit={handleSubmit}>
             {/* Поля формы авторизации */}
-            <div>
-                <Field name="email" component={Input} type="text" placeholder="Email" validate={[required]}/>
-            </div>
+            <ul>
+                <Li>
+                    <Field name="email" component={Input} type="text" placeholder="Email" validate={[required]}/>
+                </Li>
 
-            <div>
-                <Field name="password" component={Input} type="password" placeholder="Password" validate={[required]}/>
-            </div>
+                <Li>
+                    <Field name="password" component={Input} type="password" placeholder="Password" validate={[required]}/>
+                </Li>
 
-            <div>
-                <Field name="rememberMe" component={Input} type="checkbox"/> remember me
-            </div>
+                <Li>
+                    <label>
+                        <Flex align='center' padding='0 5px' height='10px' margin='0 0 35px 0'>
+                            <Field name="rememberMe" component={Checkbox} type="checkbox"/>
+                            <StyledRememberWrapper>remember me</StyledRememberWrapper>
+                        </Flex>
+                    </label>
+                </Li>
 
-            {/* Captcha */}
-            {captchaUrl && <img src={captchaUrl} alt="captcha"/>}
-            {captchaUrl &&
-            <div>
-                <Field name="captcha" component={Input} placeholder="Symbols from image" validate={[required]} />
-            </div>}
+                {/* Captcha */}
+                {captchaUrl && <Flex margin='20px 0' justify='center'><StyledCaptcha src={captchaUrl} alt="captcha"/></Flex>}
+                {captchaUrl &&
+                <Li>
+                    <Field name="captcha" component={Input} placeholder="Symbols from image" validate={[required]} />
+                </Li>}
 
 
-            {/* Валидационные ошибки */}
-            {error && <div className={styles.formSummaryError}> {error} </div>}
+                {/* Валидационные ошибки */}
+                {error && <div className={styles.formSummaryError}> {error} </div>}
 
-            <div>
-                <button>Login</button>
-            </div>
+                <Li>
+                    <Button>Login</Button>
+                </Li>
+            </ul>
         </form>
     )
 };
@@ -59,6 +72,9 @@ const LoginReduxForm = reduxForm<LoginFormValuesType, LoginFormOwnProps>({
 type MapStatePropsType = {
     isAuth: boolean
     captchaUrl: string | null
+
+    // Style
+    background?: string
 }
 
 type MapDispatchPropsType = {
@@ -87,22 +103,74 @@ const Login: React.FC<MapStatePropsType & MapDispatchPropsType> = (props) => {
     }
 
     return (
-        <div>
-            <h1>Login</h1>
+        <StyledLoginWrapper background={props.background}>
+            <Container padding='10px 30px'>
+                {/*????*/}
+                <Flex justify='center'>
+                    <div>
+                        <TitleSection title='Login' />
 
-            <p><b>Используйте следующие email и password:</b></p>
-            <p><b>login:</b> free@samuraijs.com</p>
-            <p><b>password:</b> free</p>
+                        {/* Это блок с временной информацией, на вёрстку не обращать внимание */}
+                        <StyledAdditionalInfoWrapper>
+                            <h3>Используйте следующие Email и Password:</h3>
 
-            <LoginReduxForm onSubmit={onSubmit} captchaUrl={props.captchaUrl}/>
-        </div>
+                            <ul>
+                                <Li margin='10px 0 5px 0'><b>Email: </b> free@samuraijs.com</Li>
+                                <Li><b>Password: </b> free</Li>
+                            </ul>
+                        </StyledAdditionalInfoWrapper>
+
+
+                        <LoginReduxForm onSubmit={onSubmit} captchaUrl={props.captchaUrl}/>
+                    </div>
+
+                </Flex>
+
+            </Container>
+        </StyledLoginWrapper>
     )
 }
 
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
     isAuth: state.auth.isAuth,
-    captchaUrl: state.auth.captchaUrl
+    captchaUrl: state.auth.captchaUrl,
+
+    // Style
+    background: state.app.theme.section.background
 });
 
 export default connect(mapStateToProps, {login})(Login);
+
+// Style
+// Login
+type StyledLoginWrapperType = {
+    background?: string
+}
+
+const StyledLoginWrapper = styled.div<StyledLoginWrapperType>`
+  display: flex;
+  align-items: center;
+  height: 100%;
+  background-color: ${props => props.background};
+`
+
+// Captcha
+const StyledCaptcha = styled.img`
+  border-radius: 15px 15px 15px 15px;
+  box-shadow: 0 0 10px 1px #3672f4;
+`
+
+// Remember (checkbox)
+const StyledRememberWrapper = styled.div`
+  padding-left: 15px;
+`
+
+// Additional Information
+const StyledAdditionalInfoWrapper = styled.div`
+  margin: 20px 0 30px 0;
+  padding: 10px 15px;
+  border-radius: 20px 8px 20px 8px;
+  box-shadow: 0 0 10px 1px #3672f4;
+`
+

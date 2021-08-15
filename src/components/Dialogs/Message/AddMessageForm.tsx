@@ -2,6 +2,8 @@ import React from "react";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Textarea} from "../../common/FormsControls/FormsControls";
 import {maxLengthCreator, required} from "../../../utils/validators/validators";
+import Button from "../../StyledComponents/Button";
+import styled from "styled-components";
 
 // Type (TS)
 type PropsType = {}
@@ -20,9 +22,8 @@ const AddMessageForm: React.FC<InjectedFormProps<NewMessageFormValuesType, Props
                        validate={[required, maxLength50]}
                        name="newMessageBody" placeholder="Enter your message"/>
             </div>
-            <div>
-                <button>Send</button>
-            </div>
+
+            <Button>Send</Button>
         </form>
     );
 };
@@ -32,3 +33,4 @@ export default reduxForm<NewMessageFormValuesType>({
     // a unique name for the form (уникальное имя для данной формы)
     form: 'dialogAddMessageForm',
 }) (AddMessageForm);
+

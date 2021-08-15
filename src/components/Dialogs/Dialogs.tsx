@@ -1,16 +1,23 @@
 import React from "react";
-import s from "./Dialogs.module.css";
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
 import AddMessageReduxForm from "./Message/AddMessageForm";
 import {InitialStateType} from "../../redux/dialogsReducer";
 import {FormAction} from "redux-form";
+import TitleSection from "../StyledComponents/TitleSection";
+import Section from "../StyledComponents/Section";
+import Container from "../StyledComponents/Container";
+import Flex from "../StyledComponents/Flex";
+import styled from "styled-components";
 
 // Type (TS)
 type PropsType = {
     dialogsPage: InitialStateType
     sendMessage: (messageText: string) => void
     reset: (form: string) => FormAction
+
+    // Style
+    background: string
 }
 
 // FC
@@ -28,18 +35,36 @@ const Dialogs: React.FC<PropsType> = (props) => {
 
 
     return (
-        <div className={s.dialogs}>
-            <div className={s.dialogsItems}>
-                {dialogsElements}
-            </div>
+        <Section background={props.background} height='100%'>
+            <Container padding='10px 30px' height='100%'>
+                <TitleSection title='Messages'/>
 
-            <div className={s.messages}>
-                <div>{messagesElements}</div>
+                <Flex margin='40px 0 0 0'>
+                    <StyledDialogsWrapper>
+                        {dialogsElements}
+                    </StyledDialogsWrapper>
 
-                <AddMessageReduxForm onSubmit={addNewMessage}/>
-            </div>
-        </div>
+                    <Container margin='0 0 0 20px' padding='0 0 0 20px'>
+                        <div>{messagesElements}</div>
+
+                        <AddMessageReduxForm onSubmit={addNewMessage}/>
+                    </Container>
+                </Flex>
+            </Container>
+        </Section>
     );
 };
 
 export default Dialogs;
+
+// Style
+const StyledDialogsWrapper = styled.div`
+    min-width: 200px;
+`
+
+// Style
+const StyledMessagesWrapper = styled.div`
+  padding-left: 20px;
+
+
+`

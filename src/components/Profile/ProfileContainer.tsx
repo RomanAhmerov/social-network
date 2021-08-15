@@ -6,6 +6,7 @@ import {getUserProfile, getStatus, updateStatus, savePhoto, saveProfile} from ".
 import {compose} from "redux";
 import {AppStateType} from "../../redux/reduxStore";
 import {ProfileType} from "../../types/types";
+import Section from "../StyledComponents/Section";
 
 
 // Type (TS)
@@ -68,23 +69,30 @@ class ProfileContainer extends React.Component<PropsType> {
 
     render() {
         return (
-            <Profile {...this.props} profile={this.props.profile}
-                     status={this.props.status}
-                     updateStatus={this.props.updateStatus}
-                     isOwner={!this.props.match.params.userId}
-                     savePhoto={this.props.savePhoto}
-                     saveProfile={this.props.saveProfile}
-            />
+            <Section height='100%' background={this.props.background}>
+                <Profile {...this.props} profile={this.props.profile}
+                         status={this.props.status}
+                         updateStatus={this.props.updateStatus}
+                         isOwner={!this.props.match.params.userId}
+                         savePhoto={this.props.savePhoto}
+                         saveProfile={this.props.saveProfile}
+                         backgroundInput={this.props.backgroundInput}
+                />
+            </Section>
         );
     }
 };
 
 
-let mapStateToProps = (state: AppStateType) => ({
+const mapStateToProps = (state: AppStateType) => ({
     profile: state.profilePage.profile,
     status: state.profilePage.status,
     isAuth: state.auth.isAuth,
-    authorizedUserId: state.auth.userId
+    authorizedUserId: state.auth.userId,
+
+    // Style
+    background: state.app.theme.section.background,
+    backgroundInput: state.app.theme.sidebar.backgroundSecondary
 });
 
 

@@ -10,6 +10,9 @@ import {reset} from "redux-form";
 const mapStateToProps = (state: AppStateType) => {
   return {
       dialogsPage: state.dialogsPage,
+
+      // Style
+      background: state.app.theme.section.background
   }
 };
 
