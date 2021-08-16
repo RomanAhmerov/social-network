@@ -25,20 +25,24 @@ type PropsType = {
 // FC
 const User: React.FC<PropsType> = ({user, followingInProgress, follow, unfollow, backgroundUser}) => {
     return (
-        <NavLink to={'/profile/' + user.id}>
-            <StyledUserWrapper>
-                <Flex align='center' margin='20px 0 40px 0' background={backgroundUser} borderRadius='20px' boxShadow='0 0 10px 1px rgba(54,114,244,0.6)' padding='20px 40px' maxWidth='450px'>
-                    <div>
-                        <img src={user.photos.small != null ? user.photos.small : userPhoto}
-                             className={styles.userPhoto} alt="userPhoto"/>
-                    </div>
 
+            <StyledUserWrapper>
+
+                <Flex align='center' margin='20px 0 40px 0' background={backgroundUser} borderRadius='20px' boxShadow='0 0 10px 1px rgba(54,114,244,0.6)' padding='20px 40px' maxWidth='450px'>
+                    <NavLink to={'/profile/' + user.id}>
+                        <div>
+                            <img src={user.photos.small != null ? user.photos.small : userPhoto}
+                                 className={styles.userPhoto} alt="userPhoto"/>
+                        </div>
+                    </NavLink>
 
                     <Container margin='0 0 0 30px'>
                         <Container margin='0 0 10px 0'>
-                            <StyledName>{user.name}</StyledName>
+                            <NavLink to={'/profile/' + user.id}>
+                                <StyledName>{user.name}</StyledName>
 
-                            <StyledStatus>{user.status}</StyledStatus>
+                                <StyledStatus>{user.status}</StyledStatus>
+                            </NavLink>
                         </Container>
 
                         {user.followed
@@ -54,7 +58,7 @@ const User: React.FC<PropsType> = ({user, followingInProgress, follow, unfollow,
                     </Container>
                 </Flex>
             </StyledUserWrapper>
-        </NavLink>
+
     )
 };
 
