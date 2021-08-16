@@ -46,6 +46,16 @@ const StyledLi = styled.li<StyledLiType>`
           margin-left: 50px;
         }
       }
+      
+      ${props => props.disabled && css`
+        &:hover {
+          width: 91px;
+
+          & span {
+            display: none;
+          }
+        }
+      `}
   }
     
   }
