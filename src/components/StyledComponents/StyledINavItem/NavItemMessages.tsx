@@ -48,4 +48,8 @@ const StyledWrapperIcon = styled.div`
 const TitleNavItem = styled.span`
 	display: block;
 	margin-left: 25px;
+
+	@media (max-width: 800px) {
+		display: none;
+	}
 `

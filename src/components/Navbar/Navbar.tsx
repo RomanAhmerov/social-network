@@ -3,7 +3,7 @@ import {NavLink} from "react-router-dom";
 import {connect} from "react-redux";
 import {AppStateType} from "../../redux/reduxStore";
 import {logout} from "../../redux/authReducer";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import logo from "../../assets/images/logo.png";
 import Flex from "../StyledComponents/Flex";
 import NavItemProfile from "../StyledComponents/StyledINavItem/NavItemProfile";
@@ -16,6 +16,9 @@ import Container from "../StyledComponents/Container";
 import Li from "../StyledComponents/Li";
 import Exit from "../StyledComponents/Exit";
 import Entrance from "../StyledComponents/Entrance";
+import Button from "../StyledComponents/Button";
+import ChangeThemeButton from "../StyledComponents/ChangeThemeButton";
+import {actions} from "../../redux/appReducer";
 
 const Navbar: React.FC<MapPropsType & DispatchPropsType> = (props) => {
     // Hook
@@ -45,12 +48,21 @@ const Navbar: React.FC<MapPropsType & DispatchPropsType> = (props) => {
          };
     };
 
+    function toggleTheme(theme: string): void {
+
+        if (theme == 'night') {
+            props.changeTheme('day');
+        } else {
+            props.changeTheme('night');
+        }
+    }
+
     return (
         <StyledNav background={props.background}>
-            <Flex direction='column'>
-                <Container padding='20px'>
+            <Flex direction='column' position='relative'>
+                <Container padding='20px' width='340px'>
                     <Flex>
-                        <StyledLogoLink href='#/profile' color={props.color} onClick={() => onToggleSection(isActiveSectionsObj, 'profile')}>Samurai</StyledLogoLink>
+                        <StyledLogoLink href='#/profile' color={props.color} onClick={() => onToggleSection(isActiveSectionsObj, 'profile')}><StyledSpanName>Samurai</StyledSpanName></StyledLogoLink>
 
                         {/*<div>Burger</div>*/}
                     </Flex>
@@ -77,22 +89,30 @@ const Navbar: React.FC<MapPropsType & DispatchPropsType> = (props) => {
                             </NavLink>
                         </Li>
 
-                        <Li margin='10px 0' borderRadius='15px' disabled>
+                        <Li margin='10px 0' borderRadius='15px' disabled backgroundActive={props.backgroundActive}>
                             <a>
                                 <NavItemNews fill={props.colorDisabled} />
                             </a>
                         </Li>
 
-                        <Li margin='10px 0' borderRadius='15px' disabled>
+                        <Li margin='10px 0' borderRadius='15px' disabled backgroundActive={props.backgroundActive}>
                             <a>
                                 <NavItemMusic fill={props.colorDisabled} />
                             </a>
                         </Li>
 
-                        <Li margin='10px 0' borderRadius='15px' disabled>
+                        <Li margin='10px 0' borderRadius='15px' disabled backgroundActive={props.backgroundActive}>
                             <a>
                                 <NavItemSettings fill={props.colorDisabled} />
                             </a>
+                        </Li>
+
+
+                        <Li margin='30px 0' borderRadius='15px'>
+                            <Flex>
+                                <ChangeThemeButton onClick={() => {toggleTheme(props.currentTheme)}} margin='0 0 0 0'>{props.currentTheme == 'night' ? '🌞' : '🌜'}</ChangeThemeButton>
+                            </Flex>
+
                         </Li>
                     </ul>
                 </Container>
@@ -103,7 +123,7 @@ const Navbar: React.FC<MapPropsType & DispatchPropsType> = (props) => {
                     <Container padding='0 20px' height='100%'>
                         <Flex align='center' justify='center' height='100%'>
                             {props.isAuth
-                                ? <Flex justify='center' align='center' width='100%'><div>{props.login}</div> <StyledLogoutButton background={props.background} onClick={props.logout}><Exit fill={props.color}/></StyledLogoutButton></Flex>
+                                ? <Flex justify='center' align='center' width='100%'><div> <StyledSpanName>{props.login}</StyledSpanName> </div> <StyledLogoutButton background={props.background} onClick={props.logout}><Exit fill={props.color}/></StyledLogoutButton></Flex>
                                 : <NavLink to={'/login'}><StyledLoginButton background={props.background}> <Entrance fill={props.color}/> </StyledLoginButton></NavLink>}
                         </Flex>
                     </Container>
@@ -124,10 +144,12 @@ export type MapPropsType = {
     backgroundActive?: string,
     backgroundDisabled?: string,
     colorDisabled?: string
+    currentTheme: string
 } & StyledLogoType & StyledNavType & StyledLogProfType
 
 export type DispatchPropsType = {
     logout: () => void
+    changeTheme: (whatTheme: string) => void
 }
 
 const mapStateToProps = (state: AppStateType) => ({
@@ -140,10 +162,12 @@ const mapStateToProps = (state: AppStateType) => ({
     backgroundSecondary: state.app.theme.sidebar.backgroundSecondary,
     backgroundActive: state.app.theme.button.backgroundActive,
     backgroundDisabled: state.app.theme.button.backgroundDisabled,
-    colorDisabled: state.app.theme.button.colorDisabled
+    colorDisabled: state.app.theme.button.colorDisabled,
+
+    currentTheme: state.app.theme.currentTheme as string
 });
 
-export default connect<MapPropsType, DispatchPropsType, {}, AppStateType>(mapStateToProps, {logout})(Navbar)
+export default connect<MapPropsType, DispatchPropsType, {}, AppStateType>(mapStateToProps, {logout, changeTheme: actions.changeTheme})(Navbar)
 
 
 // Style
@@ -157,6 +181,11 @@ const StyledNav = styled.nav<StyledNavType>`
   width: 340px;
 
   background-color: ${props => props.background};
+
+  @media (max-width: 800px) {
+    width: 130px;
+    
+  };
 `
 
 // LogoLink
@@ -175,15 +204,23 @@ const StyledLogoLink = styled.a<StyledLogoType>`
 
   color: ${props => props.color};
   font-family: "Comic Sans MS", cursive, sans-serif;
-  font-size: 30px;
-  font-weight: 500;
-  letter-spacing: 13px;
-  text-decoration: none;
-
+  
+  & span {
+    font-size: 30px;
+    font-weight: 500;
+    letter-spacing: 13px;
+    text-decoration: none;
+  }
+  
   background: url(${logo}) left center no-repeat;
   background-size: contain;
 
   cursor: pointer;
+
+  @media (max-width: 800px) {
+    margin-left: 20px;
+    padding-left: 0;
+  };
 `
 
 // LogProf
@@ -199,6 +236,10 @@ const StyledLogProf = styled.div<StyledLogProfType>`
   width: 340px;
   
   background-color: ${props => props.backgroundSecondary};
+
+  @media (max-width: 800px) {
+    width: 130px;
+  };
 `
 
 // Login (Button)
@@ -218,7 +259,11 @@ const StyledLoginButton = styled.button<StyledLoginButtonType>`
   
     &:hover {
       background-color: ${props => props.background};
-    }
+    };
+
+    @media (max-width: 800px) {
+      padding: 10px 12px;
+    };
 `
 
 // Logout (Button)
@@ -238,5 +283,16 @@ const StyledLogoutButton = styled.button<StyledLogoutButtonType>`
   
     &:hover {
       background-color: ${props => props.background};
-    }
+    };
+
+    @media (max-width: 800px) {
+      margin-left: 0;
+    };
+`
+
+const StyledSpanName = styled.span`
+  @media (max-width: 800px) {
+    display: none;
+  };
+
 `

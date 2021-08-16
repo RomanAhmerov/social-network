@@ -10,6 +10,7 @@ const Flex: React.FC<PropsType> = (props) => {
 
 // Style
 type StyledFlexType = {
+    position?: string
     direction?: string
     justify?: string
     align?: string
@@ -25,6 +26,7 @@ type StyledFlexType = {
 }
 
 const StyledFlex = styled.div<StyledFlexType>`
+  position: ${props => props.position};
   display: flex;
   flex-direction: ${props => props.direction || 'row'};
   justify-content: ${props => props.justify || 'stretch'};

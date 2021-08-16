@@ -43,4 +43,8 @@ const TitleNavItem = styled.span<PropsType>`
 	display: block;
 	margin-left: 25px;
 	color: ${props => props.fill};
+
+	@media (max-width: 800px) {
+		display: none;
+	}
 `
