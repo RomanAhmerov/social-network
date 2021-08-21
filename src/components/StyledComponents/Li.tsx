@@ -22,6 +22,7 @@ type StyledLiType = {
     borderRadius?: string
     backgroundActive?: string,
     backgroundDisabled?: string
+    isNavItem?: boolean
 }
 
 const StyledLi = styled.li<StyledLiType>`
@@ -33,31 +34,25 @@ const StyledLi = styled.li<StyledLiType>`
   
   &:hover {
     background-color: ${props => props.backgroundActive};
-
-
+  }
+  
+  ${props => props.isNavItem && css`
     @media (max-width: 800px) {
       width: 91px;
-      
-      &:hover {
-        width: 220px;
-        
-        & span {
-          display: block;
-          margin-left: 50px;
-        }
-      }
-  }
-    
-  }
+
+      //&:hover {
+      //  width: 220px;
+      //  
+      //  & span {
+      //    display: block;
+      //    margin-left: 50px;
+      //  }
+      //}
+    }
+  `};
   
   ${props => props.active && css<StyledLiType>`
     box-shadow: -2px 0 0 0 #f44336;
     background-color: ${props => props.backgroundActive};
-
-    @media (max-width: 800px) {
-      width: 91px;
-      
-      
-    }
   `};
 `

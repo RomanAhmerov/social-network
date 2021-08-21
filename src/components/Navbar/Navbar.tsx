@@ -60,48 +60,48 @@ const Navbar: React.FC<MapPropsType & DispatchPropsType> = (props) => {
     return (
         <StyledNav background={props.background}>
             <Flex direction='column' position='relative'>
-                <Container padding='20px' width='340px'>
+                <StyledNavContainer>
                     <Flex>
                         <StyledLogoLink href='#/profile' color={props.color} onClick={() => onToggleSection(isActiveSectionsObj, 'profile')}><StyledSpanName>Samurai</StyledSpanName></StyledLogoLink>
 
                         {/*<div>Burger</div>*/}
                     </Flex>
 
-                    <ul>
+                    <StyledUl>
                         <Li margin='10px 0' borderRadius='15px' backgroundActive={props.backgroundActive}
-                            active={isActiveSectionsObj.profile}>
+                            active={isActiveSectionsObj.profile} isNavItem={true}>
                             <NavLink to="/profile" onClick={() => onToggleSection(isActiveSectionsObj, 'profile')}>
                                 <NavItemProfile fill={props.color}/>
                             </NavLink>
                         </Li>
 
                         <Li margin='10px 0' borderRadius='15px' backgroundActive={props.backgroundActive}
-                            active={isActiveSectionsObj.messages}>
+                            active={isActiveSectionsObj.messages} isNavItem={true}>
                             <NavLink to="/dialogs" onClick={() => onToggleSection(isActiveSectionsObj, 'messages')}>
                                 <NavItemMessages fill={props.color}/>
                             </NavLink>
                         </Li>
 
                         <Li margin='10px 0' borderRadius='15px' backgroundActive={props.backgroundActive}
-                            active={isActiveSectionsObj.users}>
+                            active={isActiveSectionsObj.users} isNavItem={true}>
                             <NavLink to="/users" onClick={() => onToggleSection(isActiveSectionsObj, 'users')}>
                                 <NavItemUsers fill={props.color}/>
                             </NavLink>
                         </Li>
 
-                        <Li margin='10px 0' borderRadius='15px' disabled backgroundActive={props.backgroundActive}>
+                        <Li margin='10px 0' borderRadius='15px' disabled backgroundActive={props.backgroundActive} isNavItem={true}>
                             <a>
                                 <NavItemNews fill={props.colorDisabled} />
                             </a>
                         </Li>
 
-                        <Li margin='10px 0' borderRadius='15px' disabled backgroundActive={props.backgroundActive}>
+                        <Li margin='10px 0' borderRadius='15px' disabled backgroundActive={props.backgroundActive} isNavItem={true}>
                             <a>
                                 <NavItemMusic fill={props.colorDisabled} />
                             </a>
                         </Li>
 
-                        <Li margin='10px 0' borderRadius='15px' disabled backgroundActive={props.backgroundActive}>
+                        <Li margin='10px 0' borderRadius='15px' disabled backgroundActive={props.backgroundActive} isNavItem={true}>
                             <a>
                                 <NavItemSettings fill={props.colorDisabled} />
                             </a>
@@ -114,8 +114,8 @@ const Navbar: React.FC<MapPropsType & DispatchPropsType> = (props) => {
                             </Flex>
 
                         </Li>
-                    </ul>
-                </Container>
+                    </StyledUl>
+                </StyledNavContainer>
 
 
 
@@ -294,5 +294,23 @@ const StyledSpanName = styled.span`
   @media (max-width: 800px) {
     display: none;
   };
+`
 
+// Nav Container
+const StyledNavContainer = styled.div`
+  padding: 20px;
+  width: 340px;
+
+  @media (max-width: 800px) {
+    width: 125px;
+  }
+`
+
+
+// Ul
+const StyledUl = styled.ul`
+  @media (max-width: 800px) {
+    margin-right: 0;
+    width: 91px;
+  }
 `
